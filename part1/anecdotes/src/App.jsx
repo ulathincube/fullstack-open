@@ -1,5 +1,14 @@
 import { useState } from 'react';
 
+function Anecdote({ title, anecdote }) {
+  return (
+    <div>
+      <h2>{title}</h2>
+      <p>{anecdote}</p>
+    </div>
+  );
+}
+
 function App() {
   const anecdotes = [
     'If it hurts, do it more often.',
@@ -14,15 +23,56 @@ function App() {
 
   const [selected, setSelected] = useState(0);
 
+  const [votes, setVotes] = useState({
+    0: 0,
+    1: 0,
+    2: 0,
+    3: 0,
+    4: 0,
+    5: 0,
+    6: 0,
+    7: 0,
+  });
+
+  const currentVotes = votes[selected];
+  const anecdote = anecdotes[selected];
+
   const getRandomNum = () => Math.round(Math.random() * 7);
+
   const randomAnecdoteHandler = () => {
     setSelected(getRandomNum());
   };
 
+  const voteAnecdoteHandler = key => {
+    setVotes({ ...votes, [key]: votes[key] + 1 });
+  };
+
+  const returnHighestVoted = () => {
+    const votesArray = Object.entries(votes);
+    let largest = votesArray[0];
+
+    for (let i = 0; i < votesArray.length; i++) {
+      const current = votesArray[i];
+      if (current[1] > largest[1]) {
+        largest = votesArray[i];
+      }
+    }
+
+    const highestVote = anecdotes[largest[0]];
+    return highestVote;
+  };
+
+  const highestVote = returnHighestVoted();
+
   return (
     <div>
-      <div>{anecdotes[selected]}</div>
-      <button onClick={randomAnecdoteHandler}>Random Anecdote</button>
+      <Anecdote title='Anecdote of the Day' anecdote={anecdote} />
+      <div>has {currentVotes} votes</div>
+      <div style={{ display: 'flex', gap: 5 }}>
+        <button onClick={() => voteAnecdoteHandler(selected)}>Vote</button>
+        <button onClick={randomAnecdoteHandler}>Next Anecdote</button>
+      </div>
+      <Anecdote title='Anecdote with most votes' anecdote={highestVote} />
     </div>
   );
 }
