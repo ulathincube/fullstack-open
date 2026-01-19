@@ -40,12 +40,13 @@ function App() {
   const [neutral, setNeutral] = useState(0);
   const [bad, setBad] = useState(0);
 
-  const statsData =
-    good || neutral || bad ? (
-      <Statistics good={good} neutral={neutral} bad={bad} />
-    ) : (
-      <div>No feedback given</div>
-    );
+  const hasFeedback = good || neutral || bad;
+
+  const statsData = hasFeedback ? (
+    <Statistics good={good} neutral={neutral} bad={bad} />
+  ) : (
+    <div>No feedback given</div>
+  );
 
   return (
     <div>
