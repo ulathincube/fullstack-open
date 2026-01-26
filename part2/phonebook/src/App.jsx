@@ -3,6 +3,7 @@ import Filter from './components/Filter';
 import Form from './components/Form';
 import Persons from './components/Persons';
 import axios from 'axios';
+import personServices from './services/persons';
 
 function App() {
   const [persons, setPersons] = useState([]);
@@ -24,15 +25,41 @@ function App() {
     const userExists = persons.find(person => person.name === newName);
 
     if (userExists) {
-      alert(`${newName} is already added to phonebook!`);
+      const answer =
+        confirm(`${userExists.name} is already added to the phonebook, replace the old number
+        with a new one?`);
+
+      if (!answer) return;
+      personServices
+        .updateUser(userExists.id, {
+          ...userExists,
+          number: newNumber,
+        })
+        .then(updatedUser => {
+          const userIndex = persons.findIndex(
+            person => person.id === updatedUser.id,
+          );
+          const newPersons = [...persons];
+          newPersons[userIndex] = updatedUser;
+          setPersons(newPersons);
+          setNewName('');
+          setNewNumber('');
+        });
+
       return;
     }
-    const personsList = [
-      ...persons,
-      { name: newName, id: persons.length + 1, number: newNumber },
-    ];
-    setPersons(personsList);
+
+    const newPerson = { name: newName, number: newNumber };
+
+    personServices.create(newPerson).then(personData => {
+      const personsList = [...persons, personData];
+      setPersons(personsList);
+      setNewName('');
+      setNewNumber('');
+    });
   };
+
+  const onUpdatePersons = newPersons => setPersons(newPersons);
 
   const onChangeNameHandler = event => setNewName(event.target.value);
 
@@ -59,7 +86,11 @@ function App() {
         onChangeNumber={onChangeNumberHandler}
       />
       <h3>Numbers</h3>
-      <Persons searchName={searchName} persons={persons} />
+      <Persons
+        searchName={searchName}
+        persons={persons}
+        onUpdatePersons={onUpdatePersons}
+      />
     </div>
   );
 }

@@ -1,5 +1,20 @@
-function Persons({ searchName, persons }) {
+import personServices from '../services/persons';
+
+function Persons({ searchName, persons, onUpdatePersons }) {
   let personsData, filteredPersons;
+
+  const deleteUser = userId => {
+    const user = persons.find(person => person.id === userId);
+    const answer = confirm(`Delete ${user.name}?`);
+
+    if (!answer) return;
+    personServices.deleteUser(userId).then(deletedUser => {
+      const filteredPersons = persons.filter(
+        person => person.id !== deletedUser.id,
+      );
+      onUpdatePersons(filteredPersons);
+    });
+  };
 
   if (searchName) {
     filteredPersons = persons
@@ -15,6 +30,7 @@ function Persons({ searchName, persons }) {
     personsData = persons.map(person => (
       <li key={person.id}>
         <span>{person.name}</span> <span>{person.number}</span>
+        <button onClick={() => deleteUser(person.id)}>Delete</button>
       </li>
     ));
   }
