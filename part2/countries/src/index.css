@@ -1,0 +1,31 @@
+ul,
+ol {
+  padding: 0;
+  margin: 0;
+}
+
+.countries {
+  font-size: 16px;
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.row {
+  display: flex;
+  gap: 5;
+}
+
+.form-group {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+input[type='text'] {
+  min-width: 350px;
+  padding: 10px;
+  border-radius: 3px;
+  border: 1px solid black;
+}
