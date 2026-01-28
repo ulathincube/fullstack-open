@@ -43,6 +43,7 @@ function deleteOnePerson(req, res) {
 
 function createOnePerson(req, res) {
   const { name, number } = req.body;
+  console.log({ name, number });
 
   if (!name || !number)
     return res
@@ -58,7 +59,7 @@ function createOnePerson(req, res) {
       .status(400)
       .json({ error: 'Name must be unique! No duplicate names allowed' });
 
-  const generateId = () => Math.round(Math.random() * 200);
+  const generateId = () => String(Math.round(Math.random() * 200));
   const person = {
     name,
     number,
@@ -66,10 +67,8 @@ function createOnePerson(req, res) {
   };
 
   const newPersonsArray = allPersonsData.concat(person);
-  res.status(201).json(newPersonsArray);
+  res.status(201).json(person);
 }
-
-// method url status response-time
 
 module.exports = {
   getAllPersons,
