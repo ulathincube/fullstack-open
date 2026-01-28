@@ -2,17 +2,13 @@ import { useState, useEffect } from 'react';
 import Filter from './components/Filter';
 import Form from './components/Form';
 import Persons from './components/Persons';
-import axios from 'axios';
 import personServices from './services/persons';
 
 function App() {
   const [persons, setPersons] = useState([]);
 
   useEffect(() => {
-    axios.get('http://localhost:3001/persons').then(response => {
-      const { data: personsArray } = response;
-      setPersons(personsArray);
-    });
+    personServices.getAllUsers().then(allPersons => setPersons(allPersons));
   }, []);
 
   const [newName, setNewName] = useState('');
@@ -52,6 +48,7 @@ function App() {
     const newPerson = { name: newName, number: newNumber };
 
     personServices.create(newPerson).then(personData => {
+      console.log('Created Person', { personData });
       const personsList = [...persons, personData];
       setPersons(personsList);
       setNewName('');

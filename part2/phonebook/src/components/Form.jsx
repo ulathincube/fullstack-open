@@ -2,10 +2,10 @@ function Form({ onSubmitPerson, name, onChangeName, number, onChangeNumber }) {
   return (
     <form onSubmit={onSubmitPerson}>
       <div>
-        <label htmlFor='person'>Name</label>
+        <label htmlFor='name'>Name</label>
         <input
           type='text'
-          name='person'
+          name='name'
           id='person'
           value={name}
           onChange={onChangeName}
