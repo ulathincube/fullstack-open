@@ -1,5 +1,6 @@
 const { readFileSync } = require('node:fs');
 const { join } = require('node:path');
+const Person = require('../models/person');
 
 const allPersonsData = JSON.parse(
   readFileSync(join(__dirname, '../../', 'data.json'), {
@@ -8,19 +9,16 @@ const allPersonsData = JSON.parse(
 );
 
 function getAllPersons(req, res) {
-  res.status(200).json(allPersonsData);
+  Person.find({}).then(persons => res.status(200).json(persons));
 }
 
 function getOnePerson(req, res) {
   const { personId } = req.params;
 
-  const person = allPersonsData.find(
-    personObject => personObject.id === personId,
-  );
-
-  if (!person) return res.status(404).end();
-
-  res.status(200).json(person);
+  Person.findById(personId).then(person => {
+    if (!person) return res.status(404).end();
+    res.status(200).json(person);
+  });
 }
 
 function deleteOnePerson(req, res) {
@@ -43,31 +41,30 @@ function deleteOnePerson(req, res) {
 
 function createOnePerson(req, res) {
   const { name, number } = req.body;
-  console.log({ name, number });
 
   if (!name || !number)
     return res
       .status(400)
       .json({ error: "Please provide both a person's name and number!" });
 
-  const personExists = allPersonsData.find(
-    personObject => personObject.name === name,
-  );
+  // const personExists = allPersonsData.find(
+  //   personObject => personObject.name === name,
+  // );
 
-  if (personExists)
-    return res
-      .status(400)
-      .json({ error: 'Name must be unique! No duplicate names allowed' });
+  // if (personExists)
+  //   return res
+  //     .status(400)
+  //     .json({ error: 'Name must be unique! No duplicate names allowed' });
 
-  const generateId = () => String(Math.round(Math.random() * 200));
-  const person = {
+  const person = new Person({
     name,
     number,
-    id: generateId(),
-  };
+  });
 
-  const newPersonsArray = allPersonsData.concat(person);
-  res.status(201).json(person);
+  person
+    .save()
+    .then(() => res.status(201).json(person))
+    .catch(error => console.log(error.message));
 }
 
 module.exports = {
