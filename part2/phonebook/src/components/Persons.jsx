@@ -19,11 +19,12 @@ function Persons({ searchName, persons, onUpdatePersons }) {
   if (searchName) {
     filteredPersons = persons
       .filter(person =>
-        person.name.toLowerCase().startsWith(searchName.toLowerCase()),
+        person.name.toLowerCase().includes(searchName.toLowerCase()),
       )
       .map(({ name, id, number }) => (
         <li key={id}>
           <span>{name}</span> <span>{number}</span>
+          <button onClick={() => deleteUser(id)}>Delete</button>
         </li>
       ));
   } else {

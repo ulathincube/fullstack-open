@@ -1,5 +1,3 @@
-const { readFileSync } = require('node:fs');
-const { join } = require('node:path');
 const Person = require('../models/person');
 
 function getAllPersons(req, res, next) {
@@ -34,15 +32,6 @@ function createOnePerson(req, res, next) {
     return res
       .status(400)
       .json({ error: "Please provide both a person's name and number!" });
-
-  // const personExists = allPersonsData.find(
-  //   personObject => personObject.name === name,
-  // );
-
-  // if (personExists)
-  //   return res
-  //     .status(400)
-  //     .json({ error: 'Name must be unique! No duplicate names allowed' });
 
   const person = new Person({
     name,

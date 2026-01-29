@@ -1,9 +1,10 @@
 function Form({ onSubmitPerson, name, onChangeName, number, onChangeNumber }) {
   return (
-    <form onSubmit={onSubmitPerson}>
-      <div>
+    <form className='user-form' onSubmit={onSubmitPerson}>
+      <div className='form-field'>
         <label htmlFor='name'>Name</label>
         <input
+          className='text-field'
           type='text'
           name='name'
           id='person'
@@ -11,9 +12,10 @@ function Form({ onSubmitPerson, name, onChangeName, number, onChangeNumber }) {
           onChange={onChangeName}
         />
       </div>
-      <div>
+      <div className='form-field'>
         <label htmlFor='number'>Phone Number</label>
         <input
+          className='text-field'
           type='text'
           name='number'
           id='number'
@@ -22,7 +24,9 @@ function Form({ onSubmitPerson, name, onChangeName, number, onChangeNumber }) {
         />
       </div>
       <div>
-        <button type='submit'>add</button>
+        <button className='add-person' type='submit'>
+          Add Person
+        </button>
       </div>
     </form>
   );

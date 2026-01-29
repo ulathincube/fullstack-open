@@ -1,3 +1,7 @@
+html {
+  font-family: 'sans-serif';
+}
+
 .notification {
   background-color: #eee;
   border-radius: 5px;
@@ -10,4 +14,30 @@ ol {
   margin: 0;
   padding: 0;
   list-style: none;
+}
+
+.text-field {
+  min-width: 300px;
+  padding: 10px;
+  border-radius: 2.5px;
+  border: 1px solid black;
+}
+
+.search,
+.form-field {
+  display: flex;
+  gap: 15px;
+  align-items: center;
+}
+
+.user-form {
+  display: grid;
+  gap: 15px;
+}
+
+.add-person {
+  background-color: #000;
+  color: #fff;
+  padding: 10px 20px;
+  border: none;
 }
