@@ -2,44 +2,32 @@ const { readFileSync } = require('node:fs');
 const { join } = require('node:path');
 const Person = require('../models/person');
 
-const allPersonsData = JSON.parse(
-  readFileSync(join(__dirname, '../../', 'data.json'), {
-    encoding: 'utf8',
-  }),
-);
-
-function getAllPersons(req, res) {
-  Person.find({}).then(persons => res.status(200).json(persons));
+function getAllPersons(req, res, next) {
+  Person.find({})
+    .then(persons => res.status(200).json(persons))
+    .catch(error => next(error));
 }
 
-function getOnePerson(req, res) {
+function getOnePerson(req, res, next) {
   const { personId } = req.params;
 
-  Person.findById(personId).then(person => {
-    if (!person) return res.status(404).end();
-    res.status(200).json(person);
-  });
+  Person.findById(personId)
+    .then(person => {
+      if (!person) return res.status(404).end();
+      res.status(200).json(person);
+    })
+    .catch(error => next(error));
 }
 
-function deleteOnePerson(req, res) {
+function deleteOnePerson(req, res, next) {
   const { personId } = req.params;
 
-  const person = allPersonsData.find(
-    personObject => personObject.id === personId,
-  );
-
-  if (!person) return res.status(404).end();
-
-  const otherPersons = allPersonsData.filter(
-    personObject => personObject.id !== personId,
-  );
-
-  console.log(otherPersons);
-
-  res.status(204).end();
+  Person.findByIdAndDelete(personId)
+    .then(() => res.status(204).end())
+    .catch(error => next(error));
 }
 
-function createOnePerson(req, res) {
+function createOnePerson(req, res, next) {
   const { name, number } = req.body;
 
   if (!name || !number)
@@ -64,7 +52,24 @@ function createOnePerson(req, res) {
   person
     .save()
     .then(() => res.status(201).json(person))
-    .catch(error => console.log(error.message));
+    .catch(error => next(error));
+}
+
+function updatePerson(req, res, next) {
+  const { personId } = req.params;
+  const { number } = req.body;
+
+  Person.findById(personId)
+    .then(foundPerson => {
+      if (!foundPerson) return res.status(404).end();
+
+      foundPerson.number = number;
+
+      return foundPerson
+        .save()
+        .then(updatedPerson => res.status(201).json(updatedPerson));
+    })
+    .catch(error => next(error));
 }
 
 module.exports = {
@@ -72,4 +77,5 @@ module.exports = {
   getOnePerson,
   deleteOnePerson,
   createOnePerson,
+  updatePerson,
 };

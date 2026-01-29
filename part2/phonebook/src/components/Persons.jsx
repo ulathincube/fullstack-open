@@ -8,9 +8,9 @@ function Persons({ searchName, persons, onUpdatePersons }) {
     const answer = confirm(`Delete ${user.name}?`);
 
     if (!answer) return;
-    personServices.deleteUser(userId).then(deletedUser => {
+    personServices.deleteUser(userId).then(() => {
       const filteredPersons = persons.filter(
-        person => person.id !== deletedUser.id,
+        personObject => personObject.id !== userId,
       );
       onUpdatePersons(filteredPersons);
     });

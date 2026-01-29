@@ -5,6 +5,8 @@ const morgan = require('morgan');
 const { join } = require('node:path');
 const cors = require('cors');
 require('dotenv').config();
+const errorHandler = require('./errors/errorHandler');
+const notFoundError = require('./errors/notFound');
 
 const PORT = process.env.PORT || 3001;
 const distDirectory = join(__dirname, '../', 'dist');
@@ -23,6 +25,10 @@ app.use(express.static(distDirectory));
 
 app.use('/api/persons', personsRouter);
 app.use('/info', infoRouter);
+
+app.use(notFoundError);
+
+app.use(errorHandler);
 
 app.listen(PORT, error => {
   if (error) throw error;

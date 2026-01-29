@@ -14,7 +14,7 @@ function Form({ onSubmitPerson, name, onChangeName, number, onChangeNumber }) {
       <div>
         <label htmlFor='number'>Phone Number</label>
         <input
-          type='number'
+          type='text'
           name='number'
           id='number'
           value={number}
