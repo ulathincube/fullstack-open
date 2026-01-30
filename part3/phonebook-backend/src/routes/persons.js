@@ -1,19 +1,19 @@
-const { Router } = require('express');
+const { Router } = require('express')
 const {
   getAllPersons,
   getOnePerson,
   deleteOnePerson,
   createOnePerson,
   updatePerson,
-} = require('../controllers/persons');
+} = require('../controllers/persons')
 
-const router = Router();
+const router = Router()
 
-router.get('/:personId', getOnePerson);
-router.delete('/:personId', deleteOnePerson);
-router.put('/:personId', updatePerson);
+router.get('/:personId', getOnePerson)
+router.delete('/:personId', deleteOnePerson)
+router.put('/:personId', updatePerson)
 
-router.get('/', getAllPersons);
-router.post('/', createOnePerson);
+router.get('/', getAllPersons)
+router.post('/', createOnePerson)
 
-module.exports = router;
+module.exports = router
