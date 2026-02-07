@@ -6,7 +6,13 @@ const MONGODB_URI =
     ? process.env.TEST_MONGODB_URI
     : process.env.MONGODB_URI
 
+const SALTROUNDS = process.env.SALTROUNDS
+
+const JWT_SECRET = process.env.JWT_SECRET
+
 module.exports = {
   PORT,
   MONGODB_URI,
+  SALTROUNDS,
+  JWT_SECRET,
 }

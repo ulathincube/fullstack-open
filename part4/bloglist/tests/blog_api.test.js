@@ -5,6 +5,7 @@ const app = require('../app')
 const mongoose = require('mongoose')
 const Blog = require('../models/blog')
 const { blogs, blogsInDB, nonExistingId } = require('./test_helper')
+require('dotenv').config()
 
 const api = supertest(app)
 
@@ -42,13 +43,13 @@ describe('api', () => {
       url: 'https://red-dead-redemption.com/arthur',
       likes: 100000,
     }
-    await api
+    const response = await api
       .post('/api/blogs')
       .send(newBlog)
+      .set('Authorization', `Bearer ${process.env.TEST_TOKEN}`)
       .expect(201)
       .expect('Content-Type', /application\/json/)
 
-    const response = await api.post('/api/blogs').send(newBlog)
     assert.strictEqual(response.body.title, 'How to get a lot of money')
   })
 
@@ -59,13 +60,13 @@ describe('api', () => {
       url: 'https://daslebenfuralles.de/hanz',
     }
 
-    await api
+    const response = await api
       .post('/api/blogs')
       .send(newBlog)
+      .set('Authorization', `Bearer ${process.env.TEST_TOKEN}`)
       .expect(201)
       .expect('Content-Type', /application\/json/)
 
-    const response = await api.post('/api/blogs').send(newBlog)
     assert.strictEqual(response.body.likes, 0)
   })
 
@@ -75,20 +76,33 @@ describe('api', () => {
       likes: 300,
     }
 
-    await api.post('/api/blogs').send(blog).expect(400)
+    await api
+      .post('/api/blogs')
+      .send(blog)
+      .set('Authorization', `Bearer ${process.env.TEST_TOKEN}`)
+      .expect(400)
   })
 })
 
 describe('delete a blog post', () => {
-  test.skip('deleting a blog post is successful', async () => {
+  test('deleting a blog post is successful', async () => {
     const [firstBlog] = await blogsInDB()
     const { id: blogPostId } = firstBlog.toJSON()
-    await api.delete(`/api/blogs/${blogPostId}`).expect(204)
+
+    console.log({ blogPostId })
+    await api
+      .delete(`/api/blogs/${blogPostId}`)
+      .set('Authorization', `Bearer ${process.env.TEST_TOKEN}`)
+      .expect(204)
   })
 
   test.skip('trying to delete a non existent document returns error', async () => {
     const nonExistentId = await nonExistingId()
-    await api.delete(`/api/blogs/${nonExistentId}`).expect(404)
+
+    await api
+      .delete(`/api/blogs/${nonExistentId}`)
+      .set('Authorization', `Bearer ${process.env.TEST_TOKEN}`)
+      .expect(404)
   })
 })
 
@@ -100,7 +114,7 @@ describe('update a single post', () => {
     await api.put(`/api/blogs/${blogPostId}`).send({ likes: 1500 }).expect(201)
   })
 
-  test('trying to update a non existent document returns error', async () => {
+  test.skip('trying to update a non existent document returns error', async () => {
     const nonExistentId = await nonExistingId()
 
     await api

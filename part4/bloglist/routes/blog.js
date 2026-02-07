@@ -5,13 +5,14 @@ const {
   deleteBlogPost,
   updateBlogPost,
 } = require('../controllers/blog')
+const userExtractor = require('../middlewares/userExtractor')
 
 const router = Router()
 
 router.get('/', showAllBlogs)
-router.post('/', createBlogPost)
+router.post('/', userExtractor, createBlogPost)
 
 router.put('/:id', updateBlogPost)
-router.delete('/:id', deleteBlogPost)
+router.delete('/:id', userExtractor, deleteBlogPost)
 
 module.exports = router

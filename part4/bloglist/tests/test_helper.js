@@ -1,5 +1,11 @@
 const Blog = require('../models/blog')
 
+const user = {
+  username: 'therealjasonzw',
+  name: 'Jason Miller',
+  password: '**therealmiller**',
+}
+
 const blogs = [
   {
     title: 'How to get gain a lot of muscle',
@@ -42,4 +48,5 @@ module.exports = {
   blogs,
   blogsInDB,
   nonExistingId,
+  user,
 }
