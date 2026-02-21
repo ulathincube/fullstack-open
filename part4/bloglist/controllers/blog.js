@@ -40,6 +40,7 @@ async function createBlogPost(req, res) {
 async function deleteBlogPost(req, res, next) {
   const { id } = req.params
   const { user } = req
+  console.log(user)
 
   if (!user)
     return res.status(401).json({
@@ -69,17 +70,25 @@ async function deleteBlogPost(req, res, next) {
 
 async function updateBlogPost(req, res, next) {
   const { id } = req.params
-  const { likes = 0 } = req.body
+  const { likes, title, author, url } = req.body
 
   try {
     const blogPost = await Blog.findById(id)
+
     if (!blogPost) return res.status(404).end()
 
+    blogPost.author = author
+    blogPost.title = title
+    blogPost.url = url
     blogPost.likes = likes
 
-    await blogPost.save()
+    const updatedData = await blogPost.save()
+    const populatedData = await updatedData.populate('user', {
+      username: 1,
+      name: 1,
+    })
 
-    res.status(201).json(blogPost)
+    res.status(201).json(populatedData)
   } catch (error) {
     next(error)
   }

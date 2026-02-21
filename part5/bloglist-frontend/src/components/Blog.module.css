@@ -1,0 +1,41 @@
+.container {
+  border: 1px solid black;
+  padding: 1rem;
+  margin: 1rem 0;
+}
+
+.heading {
+  font-size: 20px;
+  font-weight: 600;
+}
+
+.button {
+  background-color: black;
+  display: block;
+  color: white;
+  padding: 0.5rem 1.5rem;
+  border: none;
+  border-radius: 0.25rem;
+}
+
+.link {
+  display: block;
+}
+
+.list {
+  display: flex;
+  gap: 10px;
+}
+
+.link,
+.list,
+.button {
+  margin-bottom: 10px;
+}
+
+.remove {
+  background-color: red;
+  color: white;
+  border: none;
+  padding: 0.5rem 1rem;
+}

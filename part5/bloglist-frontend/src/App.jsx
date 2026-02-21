@@ -14,10 +14,10 @@ function App() {
   useEffect(() => {
     const getUserData = () => {
       const localStorageUser = window.localStorage.getItem('user');
-      if (localStorageUser) {
-        const userData = JSON.parse(localStorageUser);
-        setUser(userData);
-      }
+
+      if (!localStorageUser) return;
+      const userData = JSON.parse(localStorageUser);
+      setUser(userData);
     };
     getUserData();
   }, []);

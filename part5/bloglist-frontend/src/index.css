@@ -1,0 +1,23 @@
+dl,
+dt,
+dd {
+  margin: 0;
+  padding: 0;
+  display: inline;
+}
+
+html {
+  font-family: 'Inter', 'Lato', sans-serif;
+  font-size: 62.5%;
+}
+
+body {
+  font-size: 1.8rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 100vw;
+  min-height: 100vh;
+  margin: 2rem 0;
+}

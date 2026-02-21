@@ -30,4 +30,32 @@ async function createBlog(data) {
   }
 }
 
-export default { getAll, getToken, createBlog };
+async function updateBlog(data, id) {
+  const authConfig = {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  };
+
+  try {
+    const response = await axios.put(`${baseUrl}/${id}`, data, authConfig);
+    return response.data;
+  } catch (error) {
+    throw new Error(error.response.data.error);
+  }
+}
+
+async function deleteBlogPost(id) {
+  const config = {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  };
+  try {
+    await axios.delete(`${baseUrl}/${id}`, config);
+  } catch (error) {
+    throw new Error(error.response.data.error);
+  }
+}
+
+export default { getAll, getToken, createBlog, updateBlog, deleteBlogPost };

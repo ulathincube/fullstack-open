@@ -1,13 +1,20 @@
 import { useState } from 'react';
 import blogServices from '../services/blogs';
+import styles from './NewBlog.module.css';
 
-function NewBlog({ user, onBlogAdd, onUpdateMessage }) {
+function NewBlog({ user, onBlogUpdate, onUpdateMessage, blogs, onToggle }) {
   const [title, setTitle] = useState('');
   const [author, setAuthor] = useState('');
   const [url, setUrl] = useState('');
 
   const createPostHandler = async event => {
     event.preventDefault();
+
+    const clearInputs = () => {
+      setTitle('');
+      setAuthor('');
+      setUrl('');
+    };
 
     if (!title || !url || !author) {
       onUpdateMessage({
@@ -20,15 +27,14 @@ function NewBlog({ user, onBlogAdd, onUpdateMessage }) {
     try {
       blogServices.getToken(user.token);
       const dbBlogPost = await blogServices.createBlog(blogPost);
-      onBlogAdd(dbBlogPost);
+      onBlogUpdate(blogs.concat(dbBlogPost));
       onUpdateMessage({
         message: `Blog post: ${title} by ${author} has been added!`,
         type: 'success',
       });
 
-      setTitle('');
-      setAuthor('');
-      setUrl('');
+      clearInputs();
+      onToggle();
     } catch (error) {
       onUpdateMessage({ message: error.message, type: 'error' });
     }
