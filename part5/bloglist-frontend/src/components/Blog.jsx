@@ -1,55 +1,45 @@
-import { useState } from 'react';
-import Togglable from './Togglable';
-import blogServices from '../services/blogs';
-import styles from './Blog.module.css';
+import { useState } from 'react'
+import Togglable from './Togglable'
+import blogServices from '../services/blogs'
+import styles from './Blog.module.css'
 
-function Blog({ blog, user, onUpdateMessage, onBlogUpdate, blogs }) {
-  const [show, setShow] = useState(false);
-  const [likes, setLikes] = useState(blog.likes);
+function Blog({
+  blog,
+  user,
+  onUpdateMessage,
+  onBlogUpdate,
+  blogs,
+  onPostLike,
+}) {
+  const [show, setShow] = useState(false)
 
-  const showWhenSetShow = { display: show ? '' : 'none' };
+  const showWhenSetShow = { display: show ? '' : 'none' }
 
-  const toggleShow = () => setShow(!show);
-
-  const likePostHandler = async () => {
-    const likesCount = likes + 1;
-
-    // toggleShow();
-    setLikes(likesCount);
-
-    const { author, title, url } = blog;
-
-    blogServices.getToken(user.token);
-
-    await blogServices.updateBlog(
-      { author, title, url, likes: likesCount },
-      blog.id,
-    );
-  };
+  const toggleShow = () => setShow(!show)
 
   const removePostHandler = async () => {
     const response = window.confirm(
-      `Are you sure you want to remove the post: ${blog.title} by ${blog.author}`,
-    );
+      `Are you sure you want to remove the post: ${blog.title} by ${blog.author}`
+    )
 
-    if (!response) return;
+    if (!response) return
     try {
-      blogServices.getToken(user.token);
-      await blogServices.deleteBlogPost(blog.id);
+      blogServices.getToken(user.token)
+      await blogServices.deleteBlogPost(blog.id)
       const filteredBlogs = blogs.filter(
-        blogObject => blogObject.id !== blog.id,
-      );
+        (blogObject) => blogObject.id !== blog.id
+      )
 
-      onBlogUpdate(filteredBlogs);
+      onBlogUpdate(filteredBlogs)
       // onBlogUpdate(previousState =>
       //   previousState.filter(blogObject => blogObject.id === blog.id),
       // );
     } catch (error) {
-      onUpdateMessage({ message: error.message, type: 'error' });
+      onUpdateMessage({ message: error.message, type: 'error' })
     }
-  };
+  }
 
-  const isOwner = user.username === blog.user.username;
+  const isOwner = user.username === blog.user.username
 
   return (
     <div className={styles.container}>
@@ -67,9 +57,9 @@ function Blog({ blog, user, onUpdateMessage, onBlogUpdate, blogs }) {
         </a>
         <dl className={styles.list}>
           <dt>Likes</dt>
-          <dd>{likes}</dd>
+          <dd>{blog.likes}</dd>
         </dl>
-        <button className={styles.button} onClick={likePostHandler}>
+        <button className={styles.button} onClick={onPostLike}>
           Like
         </button>
         {blog.user.name && <p>{blog.user.name}</p>}
@@ -80,7 +70,7 @@ function Blog({ blog, user, onUpdateMessage, onBlogUpdate, blogs }) {
         </button>
       )}
     </div>
-  );
+  )
 }
 
-export default Blog;
+export default Blog

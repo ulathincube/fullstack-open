@@ -1,7 +1,7 @@
-import styles from './Notification.module.css';
+import styles from './Notification.module.css'
 
 function Notification({ message, type }) {
-  return <div className={`${styles.message} ${styles[type]}`}>{message}</div>;
+  return <div className={`${styles.message} ${styles[type]}`}>{message}</div>
 }
 
-export default Notification;
+export default Notification

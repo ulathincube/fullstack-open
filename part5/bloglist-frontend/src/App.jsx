@@ -1,28 +1,28 @@
-import Home from './pages/Home';
-import Notification from './components/Notification';
-import { useState, useEffect } from 'react';
+import Home from './pages/Home'
+import Notification from './components/Notification'
+import { useState, useEffect, useCallback } from 'react'
 
 function App() {
-  const [user, setUser] = useState(null);
-  const [message, setMessage] = useState({ message: '', type: null });
+  const [user, setUser] = useState(null)
+  const [message, setMessage] = useState({ message: '', type: null })
 
-  const onUpdateMessage = newMessage => {
-    setMessage(newMessage);
-    setTimeout(() => setMessage({ message: '', type: null }), 3000);
-  };
+  const onUpdateMessage = useCallback((newMessage) => {
+    setMessage(newMessage)
+    setTimeout(() => setMessage({ message: '', type: null }), 3000)
+  }, [])
 
   useEffect(() => {
     const getUserData = () => {
-      const localStorageUser = window.localStorage.getItem('user');
+      const localStorageUser = window.localStorage.getItem('user')
 
-      if (!localStorageUser) return;
-      const userData = JSON.parse(localStorageUser);
-      setUser(userData);
-    };
-    getUserData();
-  }, []);
+      if (!localStorageUser) return
+      const userData = JSON.parse(localStorageUser)
+      setUser(userData)
+    }
+    getUserData()
+  }, [])
 
-  const onUserChange = newUser => setUser(newUser);
+  const onUserChange = (newUser) => setUser(newUser)
 
   return (
     <>
@@ -35,7 +35,7 @@ function App() {
         onUpdateMessage={onUpdateMessage}
       />
     </>
-  );
+  )
 }
 
-export default App;
+export default App

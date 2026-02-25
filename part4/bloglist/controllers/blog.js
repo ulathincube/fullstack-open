@@ -34,7 +34,12 @@ async function createBlogPost(req, res) {
   currentUser.blogs = currentUser.blogs.concat(newBlog._id)
   await currentUser.save()
 
-  res.status(201).json(newBlog)
+  const populatedBlog = await newBlog.populate('user', {
+    username: 1,
+    name: 1,
+  })
+
+  res.status(201).json(populatedBlog)
 }
 
 async function deleteBlogPost(req, res, next) {

@@ -1,17 +1,17 @@
-import { useState, useImperativeHandle } from 'react';
-import styles from './Togglable.module.css';
+import { useState, useImperativeHandle } from 'react'
+import styles from './Togglable.module.css'
 
 function Togglable({ children, mainLabel, ref }) {
-  const [visible, setVisible] = useState(false);
+  const [visible, setVisible] = useState(false)
 
-  const hideWhenVisible = { display: visible ? 'none' : '' };
-  const showWhenVisible = { display: visible ? '' : 'none' };
+  const hideWhenVisible = { display: visible ? 'none' : '' }
+  const showWhenVisible = { display: visible ? '' : 'none' }
 
-  const toggleVisibility = () => setVisible(!visible);
+  const toggleVisibility = () => setVisible(!visible)
 
   useImperativeHandle(ref, () => {
-    return { toggleVisibility };
-  });
+    return { toggleVisibility, visibility: visible }
+  })
 
   return (
     <section>
@@ -27,7 +27,7 @@ function Togglable({ children, mainLabel, ref }) {
         </button>
       </div>
     </section>
-  );
+  )
 }
 
-export default Togglable;
+export default Togglable

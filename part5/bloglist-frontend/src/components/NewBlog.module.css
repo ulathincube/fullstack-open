@@ -6,3 +6,14 @@
   border: none;
   border-radius: 0.25rem;
 }
+
+.heading {
+  font-size: 2rem;
+  font-weight: 600;
+}
+
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
