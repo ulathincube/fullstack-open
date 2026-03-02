@@ -31,6 +31,10 @@ function Blog({
       )
 
       onBlogUpdate(filteredBlogs)
+      onUpdateMessage({
+        message: `Blog post ${blog.title} by ${blog.author} has been deleted!`,
+        type: 'success',
+      })
       // onBlogUpdate(previousState =>
       //   previousState.filter(blogObject => blogObject.id === blog.id),
       // );
@@ -42,7 +46,7 @@ function Blog({
   const isOwner = user.username === blog.user.username
 
   return (
-    <div className={styles.container}>
+    <li className={`blog ${styles.container}`}>
       <div>
         <h1 className={styles.heading}>
           {blog.title} {blog.author}
@@ -69,7 +73,7 @@ function Blog({
           Remove
         </button>
       )}
-    </div>
+    </li>
   )
 }
 

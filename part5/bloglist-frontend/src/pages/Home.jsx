@@ -19,7 +19,7 @@ function Home({ user, onUserChange, onUpdateMessage }) {
         const allBlogs = await blogService.getAll()
 
         const sortedAllBlogs = allBlogs.sort(
-          (currentObject, nextObject) => currentObject.likes - nextObject.likes
+          (currentObject, nextObject) => nextObject.likes - currentObject.likes
         )
 
         setBlogs(sortedAllBlogs)
@@ -50,6 +50,7 @@ function Home({ user, onUserChange, onUpdateMessage }) {
     })
     window.localStorage.removeItem('user')
     onUserChange(null)
+    onToggle()
   }
 
   const onBlogUpdate = (blogs) => setBlogs(blogs)
@@ -95,16 +96,23 @@ function Home({ user, onUserChange, onUpdateMessage }) {
       title: data.title,
       author: data.author,
       url: data.url,
+      likes: data.likes,
     })
     const blogPost = createBlog({
       url: data.url,
       title: data.title,
       author: data.author,
+      likes: data.likes,
     })
     try {
       blogService.getToken(user.token)
       const dbBlogPost = await blogService.createBlog(blogPost)
-      onBlogUpdate(blogs.concat(dbBlogPost))
+      const updatedBlogs = blogs
+        .concat(dbBlogPost)
+        .sort(
+          (currentObject, nextObject) => nextObject.likes - currentObject.likes
+        )
+      onBlogUpdate(updatedBlogs)
       onUpdateMessage({
         message: `Blog post: ${data.title} by ${data.author} has been added!`,
         type: 'success',
@@ -119,26 +127,27 @@ function Home({ user, onUserChange, onUpdateMessage }) {
   return (
     <div>
       <h2>blogs</h2>
-      <h3>{user.username} logged in!</h3>
-      <Togglable mainLabel="Create New Blog" ref={newBlogRef}>
+
+      <Togglable mainLabel="Create" ref={newBlogRef}>
         <NewBlog
           onBlogCreate={createBlogPost}
           onUpdateMessage={onUpdateMessage}
         />
       </Togglable>
-
-      {blogs.length > 0 &&
-        blogs.map((blog) => (
-          <Blog
-            onPostLike={() => onPostLike(blog.id)}
-            onUpdateMessage={onUpdateMessage}
-            key={blog.id}
-            blog={blog}
-            user={user}
-            onBlogUpdate={onBlogUpdate}
-            blogs={blogs}
-          />
-        ))}
+      <ul className={styles.list}>
+        {blogs.length > 0 &&
+          blogs.map((blog) => (
+            <Blog
+              onPostLike={() => onPostLike(blog.id)}
+              onUpdateMessage={onUpdateMessage}
+              key={blog.id}
+              blog={blog}
+              user={user}
+              onBlogUpdate={onBlogUpdate}
+              blogs={blogs}
+            />
+          ))}
+      </ul>
       <button className={styles.button} onClick={logOutHandler}>
         Log Out
       </button>

@@ -5,3 +5,7 @@
   border: none;
   font-weight: 500;
 }
+
+.list {
+  list-style: none;
+}

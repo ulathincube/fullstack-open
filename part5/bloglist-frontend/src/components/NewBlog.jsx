@@ -5,6 +5,7 @@ function NewBlog({ onUpdateMessage, onBlogCreate }) {
   const [title, setTitle] = useState('')
   const [author, setAuthor] = useState('')
   const [url, setUrl] = useState('')
+  const [likes, setLikes] = useState(0)
 
   const onFormSubmit = (event) => {
     event.preventDefault()
@@ -19,8 +20,10 @@ function NewBlog({ onUpdateMessage, onBlogCreate }) {
       setTitle('')
       setAuthor('')
       setUrl('')
+      setLikes(0)
     }
-    onBlogCreate({ title, author, url })
+
+    onBlogCreate({ title, author, url, likes })
     clearInputs()
   }
 
@@ -58,6 +61,19 @@ function NewBlog({ onUpdateMessage, onBlogCreate }) {
             onChange={({ target }) => setUrl(target.value)}
           />
         </div>
+        <div>
+          <label htmlFor="likes">Likes</label>
+          <input
+            type="number"
+            name="likes"
+            step="1"
+            min="0"
+            id="likes"
+            value={likes}
+            onChange={({ target }) => setLikes(target.value)}
+          />
+        </div>
+
         <div>
           <button className={styles.button} type="submit">
             Create
