@@ -13,7 +13,7 @@ function Blog({
 }) {
   const [show, setShow] = useState(false)
 
-  const showWhenSetShow = { display: show ? '' : 'none' }
+  const showWhenSetShow = { display: show ? '' : 'none', position: 'absolute' }
 
   const toggleShow = () => setShow(!show)
 
