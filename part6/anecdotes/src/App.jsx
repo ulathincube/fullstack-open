@@ -1,9 +1,15 @@
 import { useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import { vote, create } from './slices/anecdoteSlice';
+import { vote, create } from './reducers/anecdoteReducer';
+import {
+  createNotification,
+  removeNotification,
+} from './reducers/notificationReducer';
 import AnecdoteForm from './components/AnecdoteForm';
-import AnecdoteList from './components/AnecdoteList';
+import Anecdote from './components/Anecdote';
 import MostVotedAnecdote from './components/MostVotedAnecdote';
+import AnecdoteList from './components/AnecdoteList';
+import Notification from './components/Notification';
 
 function App() {
   const [selected, setSelected] = useState(0);
@@ -15,6 +21,8 @@ function App() {
     );
     return stateCopy;
   });
+
+  const notificationState = useSelector(state => state.notification);
 
   if (!anecdoteState || anecdoteState.length === 0)
     return <h1>...Loading Anecdotes...</h1>;
@@ -30,6 +38,10 @@ function App() {
 
   const onCreateAnecdote = newAnecdote => {
     dispatch(create({ anecdote: newAnecdote }));
+    dispatch(createNotification(`${newAnecdote} has just been created!`));
+    setTimeout(() => {
+      dispatch(removeNotification());
+    }, 5000);
   };
 
   const voteAnecdoteHandler = id => {
@@ -51,14 +63,18 @@ function App() {
 
   const highestVote = returnHighestVoted();
 
+  console.log({ notificationState });
+
   return (
     <div>
-      <AnecdoteList
+      {notificationState && <Notification message={notificationState} />}
+      <Anecdote
         title='Anecdote of the Day'
         anecdote={anecdote}
         onVoteAnecdote={() => voteAnecdoteHandler(anecdote.id)}
         onNextAnecdote={randomAnecdoteHandler}
       />
+      <AnecdoteList onVoteAnecdote={voteAnecdoteHandler} />
       <MostVotedAnecdote
         title='Anecdote with most votes'
         anecdote={highestVote}

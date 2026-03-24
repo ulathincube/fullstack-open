@@ -1,7 +1,6 @@
-import { createSlice } from '@reduxjs/toolkit';
-import { generateId } from '../utils/generateId';
+import { generateId } from './generateId';
 
-const initialState = [
+export const initialState = [
   {
     anecdote: 'If it hurts, do it more often.',
     votes: 0,
@@ -47,29 +46,3 @@ const initialState = [
     id: generateId(),
   },
 ];
-
-export const anecdoteSlice = createSlice({
-  name: 'anecdote',
-  initialState,
-  reducers: {
-    vote: (state, action) => {
-      const anecdote = state.find(
-        anecdoteObject => anecdoteObject.id === action.payload.id,
-      );
-      anecdote.votes += 1;
-    },
-
-    create: (state, action) => {
-      const length = state.length;
-      state[length] = {
-        anecdote: action.payload.anecdote,
-        votes: 0,
-        id: generateId(),
-      };
-    },
-  },
-});
-
-export const { vote, create } = anecdoteSlice.actions;
-
-export default anecdoteSlice.reducer;

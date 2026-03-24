@@ -1,5 +1,40 @@
-function AnecdoteList({ title, anecdote, onNextAnecdote, onVoteAnecdote }) {
-  const { anecdote: anecdoteText, votes: currentVotes } = anecdote;
+import Anecdote from './Anecdote';
+import { useSelector, useDispatch } from 'react-redux';
+import FilterAnecdotes from './FilterAnecdotes';
+import {
+  createNotification,
+  removeNotification,
+} from '../reducers/notificationReducer';
+
+function AnecdoteList({ onVoteAnecdote }) {
+  const dispatch = useDispatch();
+
+  const anecdotesState = useSelector(state => {
+    console.log(state.filter);
+    if (state.filter === '*') return state.anecdote;
+
+    return state.filter
+      ? state.anecdote.filter(anecdoteObject =>
+          anecdoteObject.anecdote.includes(state.filter),
+        )
+      : state.anecdote;
+  });
+
+  const onVoteButtonHandler = anecdote => {
+    onVoteAnecdote(anecdote.id);
+    dispatch(createNotification(`You voted: ${anecdote.anecdote}.`));
+    setTimeout(() => {
+      dispatch(removeNotification());
+    }, 5000);
+  };
+
+  const anecdotesListUI = anecdotesState.map(anecdoteObject => (
+    <Anecdote
+      anecdote={anecdoteObject}
+      key={anecdoteObject.anecdote}
+      onVoteAnecdote={() => onVoteButtonHandler(anecdoteObject)}
+    />
+  ));
 
   return (
     <ul
@@ -9,15 +44,8 @@ function AnecdoteList({ title, anecdote, onNextAnecdote, onVoteAnecdote }) {
         padding: 0,
       }}
     >
-      <li>
-        <h2>{title}</h2>
-        <p>{anecdoteText}</p>
-        <div>has {currentVotes} votes</div>
-        <div style={{ display: 'flex', gap: 5 }}>
-          <button onClick={onVoteAnecdote}>Vote</button>
-          <button onClick={onNextAnecdote}>Next Anecdote</button>
-        </div>
-      </li>
+      <FilterAnecdotes />
+      {anecdotesListUI}
     </ul>
   );
 }
