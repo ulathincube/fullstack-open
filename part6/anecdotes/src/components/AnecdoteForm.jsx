@@ -1,9 +1,15 @@
 import styles from './AddAnecdote.module.css';
+import anecdoteServices from '../services/anecdotes';
 
 function AnecdoteForm({ onCreateAnecdote }) {
-  const addAnecdoteHandler = event => {
+  const addAnecdoteHandler = async event => {
     event.preventDefault();
-    onCreateAnecdote(event.target.anecdote.value);
+    const anecdote = await anecdoteServices.createNew(
+      event.target.anecdote.value,
+    );
+
+    console.log({ anecdote });
+    onCreateAnecdote(anecdote);
     event.target.anecdote.value = '';
   };
 

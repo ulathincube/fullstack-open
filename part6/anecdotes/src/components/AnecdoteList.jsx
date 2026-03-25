@@ -10,19 +10,19 @@ function AnecdoteList({ onVoteAnecdote }) {
   const dispatch = useDispatch();
 
   const anecdotesState = useSelector(state => {
-    console.log(state.filter);
-    if (state.filter === '*') return state.anecdote;
+    console.log({ state });
+    if (state.filter === '') return state.anecdote;
 
     return state.filter
       ? state.anecdote.filter(anecdoteObject =>
-          anecdoteObject.anecdote.includes(state.filter),
+          anecdoteObject.content.includes(state.filter),
         )
       : state.anecdote;
   });
 
   const onVoteButtonHandler = anecdote => {
     onVoteAnecdote(anecdote.id);
-    dispatch(createNotification(`You voted: ${anecdote.anecdote}.`));
+    dispatch(createNotification(`You voted: ${anecdote.content}.`));
     setTimeout(() => {
       dispatch(removeNotification());
     }, 5000);
@@ -31,10 +31,12 @@ function AnecdoteList({ onVoteAnecdote }) {
   const anecdotesListUI = anecdotesState.map(anecdoteObject => (
     <Anecdote
       anecdote={anecdoteObject}
-      key={anecdoteObject.anecdote}
+      key={anecdoteObject.id}
       onVoteAnecdote={() => onVoteButtonHandler(anecdoteObject)}
     />
   ));
+
+  if (!anecdotesState) return <h1>...Unable to find all anecdotes...</h1>;
 
   return (
     <ul

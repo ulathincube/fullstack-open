@@ -1,6 +1,6 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import { vote, create } from './reducers/anecdoteReducer';
+import { vote, create, setAnecdotes } from './reducers/anecdoteReducer';
 import {
   createNotification,
   removeNotification,
@@ -10,11 +10,22 @@ import Anecdote from './components/Anecdote';
 import MostVotedAnecdote from './components/MostVotedAnecdote';
 import AnecdoteList from './components/AnecdoteList';
 import Notification from './components/Notification';
+import anecdoteServices from './services/anecdotes';
+import ErrorBoundary from './components/ErrorBoundary';
 
 function App() {
   const [selected, setSelected] = useState(0);
-
   const dispatch = useDispatch();
+
+  useEffect(() => {
+    const getAnecdotes = async () => {
+      const allAnecdotes = await anecdoteServices.getAll();
+      dispatch(setAnecdotes(allAnecdotes));
+    };
+
+    getAnecdotes();
+  }, [dispatch]);
+
   const anecdoteState = useSelector(state => {
     const stateCopy = [...state.anecdote].sort(
       (currentObject, nextObject) => nextObject.votes - currentObject.votes,
@@ -37,8 +48,10 @@ function App() {
   };
 
   const onCreateAnecdote = newAnecdote => {
-    dispatch(create({ anecdote: newAnecdote }));
-    dispatch(createNotification(`${newAnecdote} has just been created!`));
+    dispatch(create(newAnecdote));
+    dispatch(
+      createNotification(`${newAnecdote.content} has just been created!`),
+    );
     setTimeout(() => {
       dispatch(removeNotification());
     }, 5000);
@@ -63,18 +76,13 @@ function App() {
 
   const highestVote = returnHighestVoted();
 
-  console.log({ notificationState });
-
   return (
     <div>
       {notificationState && <Notification message={notificationState} />}
-      <Anecdote
-        title='Anecdote of the Day'
-        anecdote={anecdote}
-        onVoteAnecdote={() => voteAnecdoteHandler(anecdote.id)}
-        onNextAnecdote={randomAnecdoteHandler}
-      />
-      <AnecdoteList onVoteAnecdote={voteAnecdoteHandler} />
+      <Anecdote title='Anecdote of the Day' anecdote={anecdote} />
+      <ErrorBoundary fallback={<div>Error encountered with AnecdoteList</div>}>
+        <AnecdoteList onVoteAnecdote={voteAnecdoteHandler} />
+      </ErrorBoundary>
       <MostVotedAnecdote
         title='Anecdote with most votes'
         anecdote={highestVote}

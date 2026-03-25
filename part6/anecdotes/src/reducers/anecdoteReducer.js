@@ -1,10 +1,8 @@
 import { createSlice, current } from '@reduxjs/toolkit';
-import { generateId } from '../utils/generateId';
-import { initialState } from '../utils/constants';
 
 export const anecdoteSlice = createSlice({
   name: 'anecdote',
-  initialState,
+  initialState: [],
   reducers: {
     vote: (state, action) => {
       const anecdote = state.find(
@@ -15,16 +13,15 @@ export const anecdoteSlice = createSlice({
     },
 
     create: (state, action) => {
-      const length = state.length;
-      state[length] = {
-        anecdote: action.payload.anecdote,
-        votes: 0,
-        id: generateId(),
-      };
+      state.push(action.payload);
+    },
+
+    setAnecdotes: (state, action) => {
+      return action.payload;
     },
   },
 });
 
-export const { vote, create } = anecdoteSlice.actions;
+export const { vote, create, setAnecdotes } = anecdoteSlice.actions;
 
 export default anecdoteSlice.reducer;

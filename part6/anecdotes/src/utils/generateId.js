@@ -1,1 +1,1 @@
-export const generateId = () => Math.random() * 1000000;
+export const generateId = () => Number(Math.random() * 1000000).toFixed(0);
