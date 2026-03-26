@@ -1,9 +1,9 @@
 function MostVotedAnecdote({ title, anecdote }) {
-  const { anecdote: anecdoteText } = anecdote;
+  const { content } = anecdote;
   return (
     <div>
       <h2>{title}</h2>
-      <p>{anecdoteText}</p>
+      <p>{content}</p>
     </div>
   );
 }

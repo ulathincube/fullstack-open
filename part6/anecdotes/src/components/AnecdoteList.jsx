@@ -1,16 +1,13 @@
 import Anecdote from './Anecdote';
 import { useSelector, useDispatch } from 'react-redux';
 import FilterAnecdotes from './FilterAnecdotes';
-import {
-  createNotification,
-  removeNotification,
-} from '../reducers/notificationReducer';
+import { setNotification } from '../reducers/notificationReducer';
+import { updateAnecdotes } from '../reducers/anecdoteReducer';
 
-function AnecdoteList({ onVoteAnecdote }) {
+function AnecdoteList() {
   const dispatch = useDispatch();
 
   const anecdotesState = useSelector(state => {
-    console.log({ state });
     if (state.filter === '') return state.anecdote;
 
     return state.filter
@@ -21,11 +18,11 @@ function AnecdoteList({ onVoteAnecdote }) {
   });
 
   const onVoteButtonHandler = anecdote => {
-    onVoteAnecdote(anecdote.id);
-    dispatch(createNotification(`You voted: ${anecdote.content}.`));
-    setTimeout(() => {
-      dispatch(removeNotification());
-    }, 5000);
+    const nextUpdate = { ...anecdote, votes: anecdote.votes + 1 };
+
+    dispatch(updateAnecdotes(nextUpdate));
+    // onVoteAnecdote(anecdote.id);
+    dispatch(setNotification(`You voted: '${anecdote.content}'.`, 5));
   };
 
   const anecdotesListUI = anecdotesState.map(anecdoteObject => (

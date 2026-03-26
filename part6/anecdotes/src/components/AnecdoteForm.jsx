@@ -1,16 +1,24 @@
 import styles from './AddAnecdote.module.css';
-import anecdoteServices from '../services/anecdotes';
+import { useDispatch } from 'react-redux';
+import { addNewAnecdote } from '../reducers/anecdoteReducer';
+import { setNotification } from '../reducers/notificationReducer';
 
-function AnecdoteForm({ onCreateAnecdote }) {
+function AnecdoteForm() {
+  const dispatch = useDispatch();
+
   const addAnecdoteHandler = async event => {
     event.preventDefault();
-    const anecdote = await anecdoteServices.createNew(
-      event.target.anecdote.value,
-    );
 
-    console.log({ anecdote });
-    onCreateAnecdote(anecdote);
+    dispatch(addNewAnecdote(event.target.anecdote.value));
+    dispatch(
+      setNotification(
+        `'${event.target.anecdote.value}' has just been created!`,
+        5,
+      ),
+    );
     event.target.anecdote.value = '';
+
+    // onCreateAnecdote(anecdote);
   };
 
   return (

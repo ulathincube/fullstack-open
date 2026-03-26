@@ -1,4 +1,3 @@
-import { generateId } from '../utils/generateId';
 const baseUrl = 'http://localhost:3001/anecdotes';
 
 const getAll = async () => {
@@ -30,4 +29,22 @@ const createNew = async content => {
   }
 };
 
-export default { getAll, createNew };
+const updateVote = async content => {
+  try {
+    const response = await fetch(`${baseUrl}/${content.id}`, {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(content),
+    });
+
+    if (!response.ok) throw new Error('Failed to make an update request!');
+
+    return await response.json();
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+export default { getAll, createNew, updateVote };
