@@ -30,7 +30,10 @@ async function createAnecdote(anecdoteText) {
   try {
     const response = await fetch(baseUrl, options)
 
-    if (!response.ok) throw new Error('Failed to create anecdote!')
+    if (!response.ok) {
+      const { error } = await response.json()
+      throw new Error(error)
+    }
 
     return await response.json()
   } catch (error) {
